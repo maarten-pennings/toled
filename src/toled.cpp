@@ -213,27 +213,22 @@ static const uint8_t oled_config_cmds[] = {
 };
 
 
-static void toled_cmds(const uint8_t *cmds, int count) {
+// Sends the cmds to the OLED display; returns I2C transaction code (0=ok)
+static int toled_cmds(const uint8_t *cmds, int count) {
   Wire.beginTransmission(I2CADDR);
   Wire.write( 0x00 ); // Control byte: Continuation=0, Data/Command#=0
   Wire.write( cmds, count );
-  Wire.endTransmission();
+  return Wire.endTransmission();
 }
 
 
-// Inits screen (using hardwired I2C address 3C). 
+// Inits screen (using hardwired I2C address 3C).
 // Caller must setup I2C pins and bus speed
 //   Wire.begin(8,18);
-//  Wire.setClock(1000*1000); // Works for OLED, to high fort other I2C devices on the bus
+//   Wire.setClock(1000*1000); // Works for OLED, too high for other I2C devices on the bus
 void toled_init() {
-  // Check if OLED is reachable (doesn't work)
-  // Wire.beginTransmission(I2CADDR);
-  // Wire.write( 0x00 ); // Control byte: Continuation=0, Data/Command#=0
-  // Wire.write( TOLED_NOP );
-  // int res=Wire.endTransmission();
-  // if( res!=0 ) Serial.printf("toled: error %d; could not find OLED on I2C address %02X\n", res, I2CADDR);
-  // Configure OLED
-  toled_cmds( oled_config_cmds, sizeof oled_config_cmds);
+  int res = toled_cmds( oled_config_cmds, sizeof oled_config_cmds);
+  // not reliable: if( res!=0 ) Serial.printf("toled: error %d; could not configure OLED on I2C address %02X\n", res, I2CADDR);
   toled_clear();
 }
 

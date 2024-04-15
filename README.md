@@ -34,4 +34,11 @@ Note the OLED supports clocks up to 1MHz, but other I2C devices on the same bus 
 
 ![text](extra/toled-font.jpg)
 
+
+## Trace
+
+The [Saleae trace](extra/trace.sal) shows the configuration stage.
+
+![trace](extra/trace.png)
+
 (end)
