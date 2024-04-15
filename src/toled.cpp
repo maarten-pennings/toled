@@ -228,7 +228,7 @@ static int toled_cmds(const uint8_t *cmds, int count) {
 //   Wire.setClock(1000*1000); // Works for OLED, too high for other I2C devices on the bus
 void toled_init() {
   int res = toled_cmds( oled_config_cmds, sizeof oled_config_cmds);
-  // not reliable: if( res!=0 ) Serial.printf("toled: error %d; could not configure OLED on I2C address %02X\n", res, I2CADDR);
+  (void)res; // not reliable: if( res!=0 ) Serial.printf("toled: error %d; could not configure OLED on I2C address %02X\n", res, I2CADDR);
   toled_clear();
 }
 
@@ -424,6 +424,12 @@ void toled_char(char ch) {
       Serial.printf(" %02X",bmp[ix]);
     Serial.printf("\n");
   #endif
+  // Check if char fits, if not wrap
+  if( toled_x + width > TOLED_WIDTH ) {
+    toled_x = 0;
+    toled_y += height;
+    if( toled_y + height > TOLED_HEIGHT ) toled_y = 0;
+  }
   // Draw character, pixel by pixel
   int stride= (width-1)/8+1; // ceil(width/8) is width of the char in bytes
   for( int y=0; y<height; y++ ) {

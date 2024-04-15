@@ -30,7 +30,7 @@ Note the OLED supports clocks up to 1MHz, but other I2C devices on the same bus 
 ## Text
 
 - Version 0.3.0 and later supports text using 4 font sizes.
-- There is no wrap-around protection for (long) strings.
+- Version 0.4.0 and later supports (screen) wrap-around for (long) strings.
 
 ![text](extra/toled-font.jpg)
 
