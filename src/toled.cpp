@@ -43,6 +43,9 @@ static inline void toled_framebuf_mask(int loc, int msk, int col) {
 }
 
 
+// === I2C REGISTERS ======================================
+
+
 // Commands of the SSD1306 OLED
 // See https://iotexpert.com/debugging-ssd1306-display-problems/
 
@@ -263,6 +266,9 @@ void toled_commit(void) {
 }
 
 
+// === PIXELS, LINES, RECTS ===============================
+
+
 // Adds pixel to frame buffer.
 // Note x=0..127, y=0..31, col=TOLED_COL_XXX.
 void toled_pixel(int x, int y, int col) {
@@ -363,4 +369,126 @@ void toled_openrect(int x0, int y0, int x1, int y1, int col ) {
   toled_horline(x0+1, x1-1, y0, col); // +/-1 to prevent overlapping corners (TOLED_COL_FLIP)
   toled_horline(x0+1, x1-1, y1, col);
   toled_verline(x1, y0, y1, col);
+}
+
+
+// === FONTS ==============================================
+
+
+static int toled_x;
+static int toled_y;
+
+
+// Sets cursor for font drawing (toled_char and toled_str)
+void toled_cursor(int x, int y) {
+  toled_x = x;
+  toled_y = y;
+}
+
+
+// Hardwired access to individual font data
+void toled_sans8 (char ch, int * width, int * height, const uint8_t ** bmp );
+void toled_sans10(char ch, int * width, int * height, const uint8_t ** bmp );
+void toled_sans12(char ch, int * width, int * height, const uint8_t ** bmp );
+void toled_sans14(char ch, int * width, int * height, const uint8_t ** bmp );
+// Generic type to font data
+typedef void (*toled_fontdata_t)(char ch, int * width, int * height, const uint8_t ** bmp );
+
+
+// Available fonts in this library
+static const toled_fontdata_t toled_fontdatas[] = { 
+  toled_sans8, toled_sans10, toled_sans12, toled_sans14 
+};
+
+
+static toled_fontdata_t toled_fontdata  = toled_sans8;
+static int              toled_kern  = 1; // space between chars
+static int              toled_color = TOLED_COL_WHITE;
+
+
+// Sets font, kerning between chars (in pix), and color for toled_char() and toled_str().
+void toled_font(toled_font_t font, int col, int kern ) {
+  toled_fontdata= toled_fontdatas[font];
+  toled_kern= kern;
+  toled_color= col;
+}
+
+
+// Adds character to frame buffer at cursor.
+void toled_char(char ch) {
+  // Lookup bitmap in font
+  int width;
+  int height;
+  const uint8_t * bmp;
+  toled_fontdata(ch,&width,&height,&bmp);
+  if( bmp==0 ) return;
+  #if 0
+    Serial.printf("char '%c' width %d height %d\n", ch, width, height);
+    Serial.printf("bmp ");
+    for( int ix=0; ix<height*(width/8+1); ix++ )
+      Serial.printf(" %02X",bmp[ix]);
+    Serial.printf("\n");
+  #endif
+  // Draw character, pixel by pixel
+  int stride= (width-1)/8+1; // ceil(width/8) is width of the char in bytes
+  for( int y=0; y<height; y++ ) {
+    for( int x=0; x<width; x++ ) {
+      int ix = y*stride + x/8;
+      int mask = 1<<(7-x%8);
+      int draw = bmp[ix] & mask;
+      //Serial.printf("%d", draw!=0 );
+      if( draw ) {
+        int xx= toled_x+x;
+        int yy= toled_y+y;
+        int loc= xx + TOLED_WIDTH*(yy/8); 
+        int msk= 1 << (yy & 7);
+        toled_framebuf_mask(loc,msk,toled_color);
+      }
+    }
+    //Serial.printf("\n");
+  }
+  toled_x += width + toled_kern;
+}
+
+
+// Adds string to frame buffer at cursor.
+void toled_str(const char *s) {
+  while( *s ) toled_char(*s++);
+}
+
+
+// Returns the width of a string in pixels with current font settings
+int toled_charwidth(char ch) {
+  // Lookup bitmap in font
+  int width;
+  int height;
+  const uint8_t * bmp;
+  toled_fontdata(ch,&width,&height,&bmp);
+
+  return width;
+}
+
+
+// Returns the width of a string in pixels with current font settings
+int toled_strwidth(const char *s) {
+  int width = 0;
+  while( *s ) {
+    width += toled_charwidth(*s++); 
+    if( *s ) width += toled_kern;
+  }
+  return width;
+}
+
+
+// Left (align=-1), center (align=0) or right (align=1) draw s in width
+void toled_str(const char *s, int width, int align) {
+  int space = width - toled_strwidth(s);
+  if( align==0 ) {
+    toled_x += space/2;
+  } else if( align>0 ) {
+    toled_x += space;
+  } else {
+    // no shift of toled_x
+  }
+  toled_str(s);
 }

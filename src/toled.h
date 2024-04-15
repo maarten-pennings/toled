@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.2.0"
+#define TOLED_VERSION  "0.3.0"
 
 
 #define TOLED_WIDTH    128
@@ -18,14 +18,35 @@
 #define TOLED_COL_FLIP  2   // Draw pixels by inverting
 
 
+// toled management
 void toled_init(void);
 void toled_clear(void);
 void toled_commit(void);
+
+// toled pixels, lines, rectangles
 void toled_pixel(int x, int y, int col);
 void toled_verline(int x, int y0, int y1, int col );
 void toled_horline(int x0, int x1, int y, int col );
 void toled_fillrect(int x0, int y0, int x1, int y1, int col );
 void toled_openrect(int x0, int y0, int x1, int y1, int col );
 
+// toled text
+typedef enum toled_font_e {
+  toled_font_sans8, 
+  toled_font_sans10, 
+  toled_font_sans12, 
+  toled_font_sans14, 
+} toled_font_t;
+
+void toled_font(toled_font_t font, int col=TOLED_COL_WHITE, int kern=1 );
+void toled_cursor(int x, int y);
+
+void toled_char(char ch);
+void toled_str(const char *s);
+
+int toled_charwidth(char ch);
+int toled_strwidth(const char *s);
+
+void toled_str(const char *s, int width, int align=0);
 
 #endif
