@@ -1,18 +1,24 @@
 # Tiny OLED (toled)
 
-Tiny OLED driver (only 128x32, only I2C, only for ESP32)
+Tiny OLED driver.
 
 
 ## Introduction
 
 The aim of this driver is to use few source files, not to be portable.
-It is restructed to
-- OLEDs of 128×32
-- OLEDs using I2C
-- I2C is hardwired to 1MHz which is out-of-spec for standard i2C devices.
-  If there are other I2C devices to the bus they will not work.
-- I2C pads are hardwired in the library (pins 8 and 18)
+It is intended for
+
+- OLEDs with a resolution of 128×32.
+- OLEDs using I2C communication.
 - Written for ESP32S3
+
+The user of the library has to configure I2C pins and speed.
+Note the OLED supports clocks up to 1MHz, but other I2C devices on the same bus might not. 
+
+```c++
+  Wire.begin(8,18,1000000); // SDA, SCL, freq
+  toled_init();
+```
 
 
 ## Notes

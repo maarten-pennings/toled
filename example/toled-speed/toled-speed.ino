@@ -21,7 +21,7 @@ void setup() {
   Serial.begin(115200);
   Serial.printf("Welcome to tiny OLED (toled-speed.ino)\n");
 
-  Wire.begin(8,18,1000000); // SDA, SCL freq
+  Wire.begin(8,18,1000000); // SDA, SCL, freq
   toled_init();
   Serial.printf("\n");
 
