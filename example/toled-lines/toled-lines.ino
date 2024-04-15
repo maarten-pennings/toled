@@ -1,7 +1,9 @@
 // toled-lines.ino - Example drawing lines and rectangles in three colors
+#include <Wire.h>
 #include <toled.h>
 
 
+// Example drawing a cross using toled_pixel()
 void cross() {
   // Clear framebuffer
   toled_clear();
@@ -50,6 +52,7 @@ void cross() {
 }
 
 
+// Example drawing rectangles using toled_verline(), toled_horline(), toled_fillrect(), toled_openrect().
 void rects() {
   toled_clear();
 
@@ -74,29 +77,11 @@ void rects() {
 }
 
 
-void time() {
-  uint32_t t0=micros();
-  toled_clear();
-  toled_fillrect(2,2, 125,29, TOLED_COL_WHITE);
-  toled_commit();
-  uint32_t t1=micros();
-  Serial.printf("time %ul us\n",t1-t0);
-  // On ESP32S3 with various OLED_I2C_FREQ
-  //   100 000 Hz -> time 48356l us [slow I2C]
-  //   200 000 Hz -> time 24384l us
-  //   300 000 Hz -> time 16270l us
-  //   400 000 Hz -> time 12452l us [fast I2C]
-  //   600 000 Hz -> time  8387l us
-  //   800 000 Hz -> time  6960l us
-  // 1 000 000 Hz -> time  60171 us
-  // 1 200 000 Hz -> time  6016l us // suspect library clips at
-  // 1 400 000 Hz -> time  6016l us
-}
-
-
 void setup() {
   Serial.begin(115200);
-  Serial.printf("Welcome to tiny OLED\n");
+  Serial.printf("Welcome to tiny OLED (toled-lines.ino)\n");
+
+  Wire.begin(8,18,1000*1000); // SDA, SCL, freq
   toled_init();
 }
 
@@ -105,7 +90,5 @@ void loop() {
   cross();
   delay(2000);
   rects();
-  delay(2000);
-  time();
   delay(2000);
 }

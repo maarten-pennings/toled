@@ -2,14 +2,21 @@
 #ifndef _TOLED_H_
 #define _TOLED_H_
 
+
 #include <stdint.h>
+
+
+#define TOLED_VERSION  "0.2.0"
+
 
 #define TOLED_WIDTH    128
 #define TOLED_HEIGHT    32
 
+
 #define TOLED_COL_BLACK 0   // Draw black pixels (off)
 #define TOLED_COL_WHITE 1   // Draw white pixels (on)
 #define TOLED_COL_FLIP  2   // Draw pixels by inverting
+
 
 void toled_init(void);
 void toled_clear(void);
@@ -19,5 +26,6 @@ void toled_verline(int x, int y0, int y1, int col );
 void toled_horline(int x0, int x1, int y, int col );
 void toled_fillrect(int x0, int y0, int x1, int y1, int col );
 void toled_openrect(int x0, int y0, int x1, int y1, int col );
+
 
 #endif

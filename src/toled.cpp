@@ -4,7 +4,6 @@
 #include "toled.h"   // own
 
 
-#define OLED_I2C_FREQ  (1000*1000) // Much higher than I2C officially allows
 #define TOLED_SIZE     (TOLED_WIDTH*TOLED_HEIGHT/8)
 #define I2CADDR        0x3C
 
@@ -219,10 +218,11 @@ static void toled_cmds(const uint8_t *cmds, int count) {
 }
 
 
-// Hardwires I2C to address 3C, 1MHz and pins 8/18, inits screen.
+// Inits screen (using hardwired I2C address 3C). 
+// Caller must setup I2C pins and bus speed
+//   Wire.begin(8,18);
+//  Wire.setClock(1000*1000); // Works for OLED, to high fort other I2C devices on the bus
 void toled_init() {
-  Wire.begin(8,18); // specific for my board
-  Wire.setClock(OLED_I2C_FREQ); // Will probably not work for other I2C devices on the bus
   // Check if OLED is reachable (doesn't work)
   // Wire.beginTransmission(I2CADDR);
   // Wire.write( 0x00 ); // Control byte: Continuation=0, Data/Command#=0
