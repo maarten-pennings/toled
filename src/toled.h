@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.3.0"
+#define TOLED_VERSION  "0.4.0"
 
 
 #define TOLED_WIDTH    128
@@ -24,11 +24,11 @@ void toled_clear(void);
 void toled_commit(void);
 
 // toled pixels, lines, rectangles
-void toled_pixel(int x, int y, int col);
-void toled_verline(int x, int y0, int y1, int col );
-void toled_horline(int x0, int x1, int y, int col );
-void toled_fillrect(int x0, int y0, int x1, int y1, int col );
-void toled_openrect(int x0, int y0, int x1, int y1, int col );
+void toled_pixel(int x, int y, int col=TOLED_COL_WHITE );
+void toled_verline(int x, int y0, int y1, int col=TOLED_COL_WHITE );
+void toled_horline(int x0, int x1, int y, int col=TOLED_COL_WHITE );
+void toled_fillrect(int x0, int y0, int x1, int y1, int col=TOLED_COL_WHITE );
+void toled_openrect(int x0, int y0, int x1, int y1, int col=TOLED_COL_WHITE );
 
 // toled text
 typedef enum toled_font_e {

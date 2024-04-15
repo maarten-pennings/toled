@@ -8,7 +8,7 @@ void time(uint32_t speed, const char * msg ) {
 
   uint32_t t0=micros();
     toled_clear();
-    toled_fillrect(2,2, 125,29, TOLED_COL_WHITE);
+    toled_fillrect(2,2, 125,29);
   uint32_t t1=micros();
     toled_commit();
   uint32_t t2=micros();
