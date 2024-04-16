@@ -32,6 +32,7 @@ void toled_openrect(int x0, int y0, int x1, int y1, int col=TOLED_COL_WHITE );
 
 // toled text
 typedef enum toled_font_e {
+  toled_font_sans5, 
   toled_font_sans8, 
   toled_font_sans10, 
   toled_font_sans12, 

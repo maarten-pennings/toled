@@ -382,6 +382,7 @@ void toled_cursor(int x, int y) {
 
 
 // Hardwired access to individual font data
+void toled_sans5 (char ch, int * width, int * height, const uint8_t ** bmp );
 void toled_sans8 (char ch, int * width, int * height, const uint8_t ** bmp );
 void toled_sans10(char ch, int * width, int * height, const uint8_t ** bmp );
 void toled_sans12(char ch, int * width, int * height, const uint8_t ** bmp );
@@ -392,7 +393,7 @@ typedef void (*toled_fontdata_t)(char ch, int * width, int * height, const uint8
 
 // Available fonts in this library
 static const toled_fontdata_t toled_fontdatas[] = { 
-  toled_sans8, toled_sans10, toled_sans12, toled_sans14 
+  toled_sans5, toled_sans8, toled_sans10, toled_sans12, toled_sans14 
 };
 
 
