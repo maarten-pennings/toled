@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.4.0"
+#define TOLED_VERSION  "0.5.0"
 
 
 #define TOLED_WIDTH    128
@@ -39,7 +39,7 @@ typedef enum toled_font_e {
   toled_font_sans14, 
 } toled_font_t;
 
-void toled_font(toled_font_t font, int col=TOLED_COL_WHITE, int kern=1 );
+void toled_font(toled_font_t font, int col=TOLED_COL_WHITE, int kern=1, int margin=0 );
 void toled_cursor(int x, int y);
 
 void toled_char(char ch);
