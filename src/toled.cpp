@@ -367,26 +367,27 @@ void toled_openrect(int x0, int y0, int x1, int y1, int col ) {
 }
 
 
-// === FONTS ==============================================
+// === TEXT ===============================================
 
 
+// Cursor for text; set by toled_cursor, moved by toled_char and toled_str.
 static int toled_x;
 static int toled_y;
 
 
-// Sets cursor for font drawing (toled_char and toled_str)
+// Sets cursor for text drawing (toled_char and toled_str)
 void toled_cursor(int x, int y) {
   toled_x = x;
   toled_y = y;
 }
 
 
-// Hardwired access to individual font data
+// Hardwired access to font data (on separate files)
 void toled_sans8 (char ch, int * width, int * height, const uint8_t ** bmp );
 void toled_sans10(char ch, int * width, int * height, const uint8_t ** bmp );
 void toled_sans12(char ch, int * width, int * height, const uint8_t ** bmp );
 void toled_sans14(char ch, int * width, int * height, const uint8_t ** bmp );
-// Generic type to font data
+// Generic type to access font data
 typedef void (*toled_fontdata_t)(char ch, int * width, int * height, const uint8_t ** bmp );
 
 
@@ -396,16 +397,19 @@ static const toled_fontdata_t toled_fontdatas[] = {
 };
 
 
+// These settings record how text will be rendered
 static toled_fontdata_t toled_fontdata  = toled_sans8;
-static int              toled_kern  = 1; // space between chars
+static int              toled_kern  = 1; // space between any two chars chars 
 static int              toled_color = TOLED_COL_WHITE;
+static int              toled_margin = 0; // margin, only applied when wrapping
 
 
-// Sets font, kerning between chars (in pix), and color for toled_char() and toled_str().
-void toled_font(toled_font_t font, int col, int kern ) {
+// Sets font, color, kerning between chars (in pix), and margin for wrap around.
+void toled_font(toled_font_t font, int col, int kern, int margin ) {
   toled_fontdata= toled_fontdatas[font];
   toled_kern= kern;
   toled_color= col;
+  toled_margin = margin;
 }
 
 
@@ -425,8 +429,8 @@ void toled_char(char ch) {
     Serial.printf("\n");
   #endif
   // Check if char fits, if not wrap
-  if( toled_x + width > TOLED_WIDTH ) {
-    toled_x = 0;
+  if( toled_x + width + toled_margin > TOLED_WIDTH ) {
+    toled_x = toled_margin;
     toled_y += height;
     if( toled_y + height > TOLED_HEIGHT ) toled_y = 0;
   }
@@ -458,7 +462,7 @@ void toled_str(const char *s) {
 }
 
 
-// Returns the width of a string in pixels with current font settings
+// Returns the width of a string in pixels with current font settings.
 int toled_charwidth(char ch) {
   // Lookup bitmap in font
   int width;
@@ -470,7 +474,7 @@ int toled_charwidth(char ch) {
 }
 
 
-// Returns the width of a string in pixels with current font settings
+// Returns the width of a string in pixels with current font settings.
 int toled_strwidth(const char *s) {
   int width = 0;
   while( *s ) {
@@ -481,7 +485,7 @@ int toled_strwidth(const char *s) {
 }
 
 
-// Left (align=-1), center (align=0) or right (align=1) draw s in width
+// Left (align=-1), center (align=0) or right (align=1) draw s in width.
 void toled_str(const char *s, int width, int align) {
   int space = width - toled_strwidth(s);
   if( align==0 ) {
