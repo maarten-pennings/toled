@@ -6,7 +6,7 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.6.0"
+#define TOLED_VERSION  "0.6.1"
 
 
 #define TOLED_WIDTH    128
