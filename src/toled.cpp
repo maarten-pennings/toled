@@ -35,6 +35,7 @@ static uint8_t toled_framebuf[TOLED_SIZE];
 
 // Applies msk to toled_framebuf[loc] using col
 static inline void toled_framebuf_mask(int loc, int msk, int col) {
+  if( loc<0 || loc>=TOLED_SIZE ) return;
   switch( col ) {
     case TOLED_COL_WHITE: toled_framebuf[loc] |=  msk; break;
     case TOLED_COL_BLACK: toled_framebuf[loc] &= ~msk; break;
@@ -430,10 +431,10 @@ void toled_char(char ch) {
     Serial.printf("\n");
   #endif
   // Check if char fits, if not wrap
-  if( toled_x + width + toled_margin > TOLED_WIDTH ) {
+  if( toled_x + width + toled_margin >= TOLED_WIDTH ) {
     toled_x = toled_margin;
     toled_y += height;
-    if( toled_y + height > TOLED_HEIGHT ) toled_y = 0;
+    if( toled_y + height >= TOLED_HEIGHT ) toled_y = 0;
   }
   // Draw character, pixel by pixel
   int stride= (width-1)/8+1; // ceil(width/8) is width of the char in bytes

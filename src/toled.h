@@ -6,7 +6,9 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.6.1"
+#define TOLED_VERSION  "0.6.2"
+// 20240417  0.6.2  bugfix: out of bounds write (added range check on loc in toled_framebuf_mask)
+// 20240417  0.6.1  
 
 
 #define TOLED_WIDTH    128
