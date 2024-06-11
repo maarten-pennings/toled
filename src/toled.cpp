@@ -431,10 +431,10 @@ void toled_char(char ch) {
     Serial.printf("\n");
   #endif
   // Check if char fits, if not wrap
-  if( toled_x + width + toled_margin >= TOLED_WIDTH ) {
+  if( toled_x + width + toled_margin > TOLED_WIDTH ) {
     toled_x = toled_margin;
     toled_y += height;
-    if( toled_y + height >= TOLED_HEIGHT ) toled_y = 0;
+    if( toled_y + height > TOLED_HEIGHT ) toled_y = 0;
   }
   // Draw character, pixel by pixel
   int stride= (width-1)/8+1; // ceil(width/8) is width of the char in bytes
@@ -471,7 +471,7 @@ int toled_charwidth(char ch) {
   int height;
   const uint8_t * bmp;
   toled_fontdata(ch,&width,&height,&bmp);
-
+  // returns char width
   return width;
 }
 
@@ -481,7 +481,7 @@ int toled_strwidth(const char *s) {
   int width = 0;
   while( *s ) {
     width += toled_charwidth(*s++); 
-    if( *s ) width += toled_kern;
+    if( *s ) width += toled_kern; // kern, except for last char
   }
   return width;
 }
@@ -489,11 +489,11 @@ int toled_strwidth(const char *s) {
 
 // Left (align=-1), center (align=0) or right (align=1) draw s in width.
 void toled_str(const char *s, int width, int align) {
-  int space = width - toled_strwidth(s);
+  int remainingspace = width - toled_strwidth(s);
   if( align==0 ) {
-    toled_x += space/2;
+    toled_x += remainingspace/2;
   } else if( align>0 ) {
-    toled_x += space;
+    toled_x += remainingspace;
   } else {
     // no shift of toled_x
   }

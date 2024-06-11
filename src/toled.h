@@ -6,8 +6,9 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.6.2"
-// 20240417  0.6.2  bugfix: out of bounds write (added range check on loc in toled_framebuf_mask)
+#define TOLED_VERSION  "0.6.3"
+// 20240611  0.6.3  bugfix: undid more strict wrapping
+// 20240607  0.6.2  bugfix: out of bounds write (added range check on loc in toled_framebuf_mask)
 // 20240417  0.6.1  
 
 
