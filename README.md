@@ -36,15 +36,9 @@ Note the OLED supports clocks up to 1MHz, but other I2C devices on the same bus 
 ![text](extra/toled-font.jpg)
 
 
-## Version history
+## Revision history
 
-- Version 0.6.3  bugfix: undid stricter text wrapping
-- Version 0.6.2  out of bounds writes ignored.
-- Version 0.6.1 updates example toled-speed to measure speed of text.
-- Version 0.6.0 added sans5.
-- Version 0.5.0 added margin for wrap-around.
-- Version 0.4.0 and later supports (screen) wrap-around for (long) strings.
-- Version 0.3.0 and later supports text using 4 font sizes.
+For revision history see [src/toled.h](`toled.h`).
 
 
 ## Trace
