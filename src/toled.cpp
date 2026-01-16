@@ -290,6 +290,8 @@ void toled_verline(int x, int y0, int y1, int col ) {
 
   int msk0= 0xFF & ~((1 << (y0 & 7))-1);
   int msk1= (1 << ((y1 & 7)+1))-1;
+  // Correct masks for short verline 
+  if( loc0==loc1 ) { msk0&=msk1; msk1&=msk0; }
 
   if(  msk0 != 0xFF ) { // pre part of line here
     toled_framebuf_mask(loc0,msk0,col);
@@ -338,6 +340,8 @@ void toled_fillrect(int x0, int y0, int x1, int y1, int col ) {
 
   int msk0= 0xFF & ~((1 << (y0 & 7))-1);
   int msk1= (1 << ((y1 & 7)+1))-1;
+  // Correct masks for short rects 
+  if( y0/8==y1/8 ) { msk0&=msk1; msk1&=msk0; }
 
   for( int x=x0; x<=x1; x++ ) {
     int loc0= x + TOLED_WIDTH*(y0/8);

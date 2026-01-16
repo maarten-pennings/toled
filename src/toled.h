@@ -6,7 +6,8 @@
 #include <stdint.h>
 
 
-#define TOLED_VERSION  "0.7.0"
+#define TOLED_VERSION  "0.7.1"
+// 20260116 0.7.1 Fixed bug for short verline's and fillrect's
 // 20260108 0.7.0 Added mono5 font, 
 //                digits sans8 now all 5 wide (`1`), 
 //                digits sans10 now all 6 wide (`1`), 
